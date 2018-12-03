@@ -4,7 +4,9 @@ This repository contains all of the scripts, functions, data, and objects needed
 
 Dependencies:
 libsvm (included)
+
 SVM-RFE-CBR (included)
+
 Datafeed Toolbox (must be installed seperately)
 
 
