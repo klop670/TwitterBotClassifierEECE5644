@@ -14,23 +14,23 @@ function [Prediction, Score] = predictUserBotOrNot(userScreenName,newMastTable, 
 
 
     %% Convert Presence Variables
-    for i = convPresc
-        twitterUserTable.(i) = convertPresenceStr2Num(twitterUserTable.(i));
+    for p = convPresc
+        twitterUserTable.(p) = convertPresenceStr2Num(twitterUserTable.(p));
     end
 
     %% Convert unique categorical strings to unique ints using lookupStruct
-    for j = covUnique
-        varName = char(varNames(j));
-        tableCol = twitterUserTable.(j);
+    for f = covUnique
+        varName = char(varNames(f));
+        tableCol = twitterUserTable.(f);
         if isstring(tableCol) == 0
-            twitterUserTable.(j) = 0;
+            twitterUserTable.(f) = 0;
         elseif isfield(listLookupStruct, varName) == 1 % ensure it's a var contained in lookup structure, if not, run the unique method again
             cnt = 1;
             found = false;
             while cnt < length(listLookupStruct.(varName).strr)
-                z = listLookupStruct.(varName).strr(cnt);
-                if z == tableCol
-                    twitterUserTable.(j) = listLookupStruct.(varName).intt(cnt);
+                c = listLookupStruct.(varName).strr(cnt);
+                if c == tableCol
+                    twitterUserTable.(f) = listLookupStruct.(varName).intt(cnt);
                     found = true;
                     break
                 end
@@ -39,17 +39,17 @@ function [Prediction, Score] = predictUserBotOrNot(userScreenName,newMastTable, 
             if found == false
                 % if not found in the struct list, add it as an entry and
                 % convert to new highest entry in norm vector
-                listLookupStruct.(varName).strr(end+1) = twitterUserTable.(j);
+                listLookupStruct.(varName).strr(end+1) = twitterUserTable.(f);
                 listLookupStruct.(varName).intt(end+1) = listLookupStruct.(varName).intt(end)+1;
-                twitterUserTable.(j) = listLookupStruct.(varName).intt(end);
-                normFacts(j) =  twitterUserTable.(j);
+                twitterUserTable.(f) = listLookupStruct.(varName).intt(end);
+                normFacts(f) =  twitterUserTable.(f);
             end
 
         else
             %if the variable not in lookup struct, well....I guess run the
             %process of assigning it as a new str->numeric variable...but this
             %shouldn't happen
-            twitterUserTable.(j) = convertCompStr2Num(twitterUserTable.(j));
+            twitterUserTable.(f) = convertCompStr2Num(twitterUserTable.(f));
         end
     end
 
@@ -108,18 +108,18 @@ function [Prediction, Score] = predictUserBotOrNot(userScreenName,newMastTable, 
         numerics = [0; 0];
         h = length(inTableCol);
         integ = 1;
-        for i = 1:h
-           if inTableCol(i) == "" || ismissing(inTableCol(i)) == 1 || double(inTableCol(i)) == 0 || inTableCol(i) == "NULL" %if empty assign 0
-               inTableCol(i) = 0;
+        for g = 1:h
+           if inTableCol(g) == "" || ismissing(inTableCol(g)) == 1 || double(inTableCol(g)) == 0 || inTableCol(g) == "NULL" %if empty assign 0
+               inTableCol(g) = 0;
            else
-               exist = find(strings == inTableCol(i));
+               exist = find(strings == inTableCol(g));
                if isempty(exist) == 1 % if not in dictionary assign it a number
-                  strings = [strings; inTableCol(i)];
+                  strings = [strings; inTableCol(g)];
                   numerics = [numerics; integ];
-                  inTableCol(i) = double(integ);
+                  inTableCol(g) = double(integ);
                   integ = integ +1;
                else
-                   inTableCol(i) = double(numerics(exist)); % if in dictionary assign it assoc integer
+                   inTableCol(g) = double(numerics(exist)); % if in dictionary assign it assoc integer
                end
 
            end
